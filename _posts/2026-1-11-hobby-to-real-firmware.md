@@ -1,6 +1,8 @@
 ---
 layout: post
 title: From Hobby Projects to Real Embedded Firmware 
+custom_excerpt: >
+    If you’ve ever played around with Arduino or a robotics kit, you probably noticed that it’s fun and easy, but real embedded firmware is a whole different world. In this post, I share what I learned from building an AUV and doing an embedded programming internship. The little mistakes that can cause big headaches, and the practices that make code reliable. Plus how thinking carefully about your system -- and its limited resources -- changes the way you write code for microcontrollers.
 
 notes: >
     The points I want to make are:

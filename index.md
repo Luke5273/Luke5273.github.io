@@ -18,8 +18,10 @@ title: Home
     </h2>
     <small>{{ post.date | date: "%B %d, %Y" }}</small>
 
-    {% if post.excerpt %}
-    <p>{{ post.excerpt | strip_html }}</p>
+    {% if post.custom_excerpt %}
+      <p>{{ post.custom_excerpt }}</p>
+    {% elsif post.excerpt %}
+      <p>{{ post.excerpt | strip_html }}</p>
     {% endif %}
   </div>
   {% endfor %}
