@@ -1,4 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-01-11T23:43:23+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Azad’s Corner</title><subtitle>Control systems, robotics, and engineering notes</subtitle><entry><title type="html">From Hobby Projects to Real Embedded Firmware</title><link href="http://localhost:4000/2026/01/11/hobby-to-real-firmware.html" rel="alternate" type="text/html" title="From Hobby Projects to Real Embedded Firmware" /><published>2026-01-11T00:00:00+05:30</published><updated>2026-01-11T00:00:00+05:30</updated><id>http://localhost:4000/2026/01/11/hobby-to-real-firmware</id><content type="html" xml:base="http://localhost:4000/2026/01/11/hobby-to-real-firmware.html"><![CDATA[<h2 id="table-of-contents">Table of Contents</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-02-14T20:54:11+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Azad’s Corner</title><subtitle>Control systems, robotics, and engineering notes</subtitle><entry><title type="html">The Equations that Control the World</title><link href="http://localhost:4000/2026/01/23/the-equations-that-control-the-world.html" rel="alternate" type="text/html" title="The Equations that Control the World" /><published>2026-01-23T00:00:00+05:30</published><updated>2026-01-23T00:00:00+05:30</updated><id>http://localhost:4000/2026/01/23/the-equations-that-control-the-world</id><content type="html" xml:base="http://localhost:4000/2026/01/23/the-equations-that-control-the-world.html"><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>Have you ever looked around and noticed how many machines – old or new – move with almost unsettling precision? Systems that track, stabilize, and correct themselves better than a human ever could? If you’ve built projects before, you might remember manually controlling each actuator. One input per motor, one knob per output. So how do real systems do it automatically? How do they decide how much to move, when to stop, and how fast to react?</p>
+
+<p>Well, buckle in dear reader, for all the answers are in a small set of ideas and equations that quietly run cars, drones, factories, medical devices, and just about everything else that moves on purpose.</p>
+
+<h1 id="feedback">Feedback</h1>
+
+<p>Often when I talk to people about controls, they have this idea that you have to solve for something then invert that equation to figure out the input. <em>This may work</em>, but the work associated with it is immense and if there are any stochastic events, it would fall apart instantly.</p>
+
+<p>Going with this approach at face value, let’s look at an example.</p>
+
+<p>Imagine designing a shower system that can automatically set the water temperature. To get an exact set of equations for the temp, we would need to describe how the ambient temperature affects the water in the water tank, how pipes of variable lengths and thicknesses would lose heat, and various other processes. Not to mention random events like wear and tear, power cuts that affect pumps and water heaters, how many people are using the water in the tank, etc.</p>
+
+<p>Could this be done? No, not to any real effect, since we have so many variables, most being <em>random, time-varying, and dependent on the installation</em>.</p>
+
+<p>Lets take a step back and see how we do it. I want you to think about your own shower. It has one knob, pressing it in and out controls the water pressure and turning it controls the water temperature. For now, imagine the water pressure is either constant or inconsequential – just focus on the temperature.</p>
+
+<p>If I ask you how to set the temperature, chances are you would not be able to do it on your first go. You’d put the water on, see if it’s too hot or cold, then adjust accordingly. Why can’t we make our system do the same thing?</p>
+
+<p>Firstly, we need to shift our mindset from what the actual temperature is to <em>how different it is from what we want</em>. In formal terms, that’s the <strong>error</strong>. Depending on this error, we know if we need to make the water hotter or cooler.</p>
+
+<p>But to see how different the temperature is, we need to <em>sense</em> it. When we’re using our own showers, we are the sensors. But for an automatic system, we need an external <strong>sensor</strong>.</p>
+
+<p>Then, depending on how large the error is, we need to take some action. This is called the <strong>controller</strong>. In the shower example, we are the controller. We decide how much to change the ratio of hot and cold water by turning the knob.</p>
+
+<p>This action is then applied back to the physical system itself – the water, heater, pipes, and tank. In control systems, this entire thing being acted upon is called the <strong>plant</strong>. The name comes from industrial automation, where the “plant” referred to the factory or process being controlled.</p>
+
+<p>The process of continuously measuring what the system is doing, comparing it to what we want it to do, and using that difference to adjust the input is called <strong>feedback</strong>. Instead of trying to predict the world perfectly, feedback lets the system react to how the world actually behaves. It is quite possibly <em>the most important concept in control systems</em>, and nearly everything that follows builds directly on this idea.</p>
+
+<h2 id="quantifying-system-performance">Quantifying system performance</h2>
+
+<p>Before we talk about how to control things, we need to understand what we’re controlling. We need some way to quantify how a system behaves. For this, we look at another example.</p>
+
+<p>Imagine a spring with a mass at the end. I know a lot of physics classes have this, showing how the mass oscilates between two points forever as a demo for potential energy and kinetic energy, but that’s always with a huge caviet: <em>We don’t consider friction</em>.</p>
+
+<p>In actuality, what we expect is for the spring to oscilate, with each peak getting smaller and smaller. This is called <em>damping</em>, and there are actually four different variations of it.</p>
+
+<p align="center">
+  <img src="/assets/images/damping.png" alt="Damping diagram" />
+</p>
+
+<p>Okay, I know this graph seems really noisy but let’s walk through it step by step.</p>
+
+<p>This is what’s known as a step response. It’s the output of the system to a <em>constant input</em>, which in this case is a constant <em>force</em>. Think of it like holding the mass steady and then suddenly letting it go. Gravity gives it a constant input.</p>
+
+<p>The frictionless case I mentioned corresponds to the undamped plot. It’s slow to start, but quickly gets up to speed. Once it passes the midpoint, the spring will start pulling it back, decelerating the mass until it eventually moves up.</p>
+
+<p>Then, with the</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Introduction Have you ever looked around and noticed how many machines – old or new – move with almost unsettling precision? Systems that track, stabilize, and correct themselves better than a human ever could? If you’ve built projects before, you might remember manually controlling each actuator. One input per motor, one knob per output. So how do real systems do it automatically? How do they decide how much to move, when to stop, and how fast to react?]]></summary></entry><entry><title type="html">From Hobby Projects to Real Embedded Firmware</title><link href="http://localhost:4000/2026/01/11/hobby-to-real-firmware.html" rel="alternate" type="text/html" title="From Hobby Projects to Real Embedded Firmware" /><published>2026-01-11T00:00:00+05:30</published><updated>2026-01-11T00:00:00+05:30</updated><id>http://localhost:4000/2026/01/11/hobby-to-real-firmware</id><content type="html" xml:base="http://localhost:4000/2026/01/11/hobby-to-real-firmware.html"><![CDATA[<h2 id="table-of-contents">Table of Contents</h2>
 
 <ol>
   <li><a href="#Introduction">Introduction</a></li>
