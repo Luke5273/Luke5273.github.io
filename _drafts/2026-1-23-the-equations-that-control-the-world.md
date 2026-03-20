@@ -6,7 +6,7 @@ custom_excerpt: >
 
 notes: >
     Flow
-    - What is feedback
+    x What is feedback
     - Quantifying system performance
         - Rise time
         - Peak/Peak time 
